@@ -1,30 +1,45 @@
 /* 전체 컨테이너 스타일 */
-.clock-container {
+.time-picker-container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
     width: 400px;
-    height: 200px;
     margin: auto;
     background-color: #222;
     color: #fff;
     font-family: 'Arial', sans-serif;
-    font-size: 32px;
+}
+
+/* 선택된 시간 표시 스타일 */
+.selected-time {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+/* 시간 섹션들을 가로 정렬 */
+.time-sections {
+    display: flex; /* 가로 정렬 */
 }
 
 /* 각 시간 섹션 스타일 */
 .time-section {
-    width: calc(400px / 2); /* 두 개의 섹션으로 나눔 */
+    width: calc(400px / 2 - 1px); /* 두 개의 섹션으로 나눔, border 공간 고려 */
     height: 200px; /* 고정 높이 */
     overflow-y: scroll; /* 수직 스크롤 활성화 */
 }
 
 .time-list {
     list-style-type: none;
-    padding: 0;
 }
 
 .time-list li {
     text-align: center;
+    font-size: 32px;
     height: calc(200px / 3); /* 각 항목 높이 */
+}
+
+/* Divider 스타일 (시간과 분 사이의 경계선) */
+.divider {
+    width: 5px; /* 경계선 두께 */
+    background-color: #ffffff; /* 경계선 색상 */
 }
