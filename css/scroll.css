@@ -41,5 +41,5 @@
 /* Divider 스타일 (시간과 분 사이의 경계선) */
 .divider {
     width: 5px; /* 경계선 두께 */
-    background-color: #ffffff; /* 경계선 색상 */
+    background-color: #fff; /* 경계선 색상 */
 }
