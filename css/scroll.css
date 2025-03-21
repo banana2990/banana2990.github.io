@@ -14,7 +14,7 @@
 
 /* 각 시간 섹션 스타일 */
 .time-section {
-    width: calc(400px / 3); /* 각 섹션 너비 */
+    width: calc(400px / 2); /* 두 개의 섹션으로 나눔 */
     height: 200px; /* 고정 높이 */
     overflow-y: scroll; /* 수직 스크롤 활성화 */
 }
@@ -27,8 +27,4 @@
 .time-list li {
     text-align: center;
     height: calc(200px / 3); /* 각 항목 높이 */
-}
-
-/* 배경 스타일 */
-.background {
 }

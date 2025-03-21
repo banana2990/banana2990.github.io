@@ -18,7 +18,7 @@
         출처 :<a href="https://x.com/rok0813/status/1846572576111570989">@rok0813</a>
     </p>
 
-    <p style="text-align: center">     시 / 분 / 초   </p>
+    <p style="text-align: center">     시 / 분 </p>
 
     <div class="clock-container">
         <!-- Hours Section -->
@@ -56,29 +56,20 @@
         <div class="time-section" id="minutes">
             <ul class="time-list">
                 <!-- Minutes from 00 to 59 -->
-                <script>
-                    for (let i = 0; i <= 59; i++) {
-                        document.write(`<li>${i.toString().padStart(2, '0')}</li>`);
-                    }
-                </script>
-            </ul>
-        </div>
-
-        <!-- Seconds Section -->
-        <div class="time-section" id="seconds">
-            <ul class="time-list">
-                <!-- Seconds from 00 to 59 -->
-                <script>
-                    for (let i = 0; i <= 59; i++) {
-                        document.write(`<li>${i.toString().padStart(2, '0')}</li>`);
-                    }
-                </script>
+                <!-- JavaScript로 동적으로 생성 -->
             </ul>
         </div>
     </div>
 
-    <!-- Background for styling -->
-    <div class="background"></div>
+    <!-- JavaScript로 동적으로 분 생성 -->
+    <script>
+        const minutesList = document.querySelector('#minutes .time-list');
+        for (let i = 0; i <= 59; i++) {
+            const li = document.createElement('li');
+            li.textContent = i.toString().padStart(2, '0'); // 두 자리로 포맷
+            minutesList.appendChild(li);
+        }
+    </script>
 
 </body>
 </html>
