@@ -157,6 +157,12 @@ function displayResults(movies, min, max) {
         resultsContainer.appendChild(movieElement);
     });
 }
+
+                // 이벤트 연결 및 초기 데이터 로드
+        searchButton.addEventListener('click', filterMoviesByRuntime);
+
+        // 페이지 로드 시 데이터 초기화 시작
+        initializeData();
     </script>
 
 </body>
