@@ -122,29 +122,42 @@
             displayResults(filteredMovies, minTime, maxTime);
         }
 
-        /**
-         * 5. 결과를 HTML에 렌더링하는 함수
-         */
-        function displayResults(movies, min, max) {
-            resultsContainer.innerHTML = ''; 
-            loadingStatus.textContent = `총 ${movies.length}개의 영화를 찾았습니다. (범위: ${min}분 ~ ${max}분)`;
-            
-            if (movies.length === 0) {
-                resultsContainer.innerHTML = "<p>검색 조건에 맞는 영화가 없습니다.</p>";
-                return;
-            }
+/**
+ * 5. 결과를 HTML에 렌더링하는 함수
+ */
+function displayResults(movies, min, max) {
+    // 💡 TMDB 이미지 기본 URL 설정
+    const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
+    const IMAGE_SIZE = "w185"; // 포스터 크기 (약 185px 너비)
 
-            movies.forEach(movie => {
-                const movieElement = document.createElement('div');
-                movieElement.className = 'movie-card';
-                movieElement.innerHTML = `
-                    <h3>${movie.title}</h3>
-                    <p>러닝 타임: <strong>${movie.runtime}분</strong></p>
-                    <p>${movie.overview.substring(0, 100)}...</p>
-                `;
-                resultsContainer.appendChild(movieElement);
-            });
-        }
+    resultsContainer.innerHTML = ''; 
+    loadingStatus.textContent = `총 ${movies.length}개의 영화를 찾았습니다. (범위: ${min}분 ~ ${max}분)`;
+    
+    if (movies.length === 0) {
+        resultsContainer.innerHTML = "<p>검색 조건에 맞는 영화가 없습니다.</p>";
+        return;
+    }
+
+    movies.forEach(movie => {
+        // 포스터 URL 생성: 기본 URL + 크기 + 포스터 경로
+        const posterUrl = movie.poster_path 
+            ? `${IMAGE_BASE_URL}${IMAGE_SIZE}${movie.poster_path}` 
+            : 'placeholder.png'; // 포스터가 없을 때 대체 이미지
+
+        const movieElement = document.createElement('div');
+        movieElement.className = 'movie-card';
+        
+        // 💡 <img> 태그 추가 및 정보 표시 업데이트
+        movieElement.innerHTML = `
+            <img src="${posterUrl}" alt="${movie.title} 포스터" class="movie-poster">
+            <h3>${movie.title}</h3>
+            <p>러닝 타임: <strong>${movie.runtime}분</strong></p>
+            <p>${movie.overview.substring(0, 100)}...</p>
+        `;
+        resultsContainer.appendChild(movieElement);
+    });
+}
+        
 
         // 이벤트 연결 및 초기 데이터 로드
         searchButton.addEventListener('click', filterMoviesByRuntime);
