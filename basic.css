@@ -64,3 +64,23 @@ h1 {
     font-size: 1.1em;
     color: #6c757d;
 }
+
+/* --- 포스터 이미지 스타일 추가 --- */
+.movie-poster {
+    width: 100%; /* 부모 카드 크기에 맞춤 (100%로 설정하고, 카드 너비를 제한) */
+    max-width: 120px; /* 💡 너비를 120px로 제한 */
+    height: auto; 
+    display: block;
+    margin: 0 auto 10px; /* 가운데 정렬 및 아래 여백 */
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.movie-card {
+    /* 기존 카드 스타일 유지 및 너비 조정 */
+    max-width: 250px; /* 카드가 너무 커지는 것을 방지 */
+    /* ... (나머지 스타일 유지) */
+}
+
+/* 포스터가 왼쪽에 붙고 싶다면 .movie-poster의 max-width를 120px로 유지하고 
+   .movie-card의 margin: 0 auto 10px; 대신 margin: 0 0 10px 0; 을 사용할 수 있습니다. */
