@@ -43,6 +43,7 @@
             const popularUrl = `${BASE_URL}/movie/popular?api_key=${YOUR_API_KEY}&language=ko-KR&page=1`;
             
             try {
+                console.log("API 호출 : ", detailUrl);
                 const response = await fetch(popularUrl);
                 const data = await response.json();
                 
@@ -61,6 +62,7 @@
             const detailUrl = `${BASE_URL}/movie/${movieId}?api_key=${YOUR_API_KEY}&language=ko-KR`;
             
             try {
+                console.log("API 호출 : ", detailUrl);
                 const response = await fetch(detailUrl);
                 const movieDetail = await response.json();
                 
