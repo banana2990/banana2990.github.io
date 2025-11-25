@@ -1,79 +1,164 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VideO'clock</title>
-    <link rel="stylesheet" href="./css/scroll.css">
-
+    <title>영화 러닝 타임 검색기 🎬</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        h1 {
+            color: #0056b3;
+            text-align: center;
+        }
+        #controls {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+        #controls label, #controls input, #controls button {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        #search-button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        #search-button:hover {
+            background-color: #0056b3;
+        }
+        #movie-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .movie-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        .movie-card:hover {
+            transform: translateY(-5px);
+        }
+        .movie-card h3 {
+            margin-top: 0;
+            color: #007bff;
+            font-size: 1.2em;
+        }
+        .movie-card strong {
+            color: #dc3545;
+        }
+        #loading-status {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.1em;
+            color: #6c757d;
+        }
+    </style>
 </head>
 <body>
-<h2>On Loading >_< </h2>
-<div>
-    다은아 안녕 나는 지금 연결 테스트를 하는 중이야 <br/>
-    회사 컴 연결은 끝났고 집 컴 연결을 해보고 있어 <br/>
-    집 컴퓨터도 일단 훌륭하게 연결은 끝냈는데 끼룩끼룩 <br/>
-</div>
-<p>
-    <img src="https://pbs.twimg.com/media/GaAgmHNbsAAcKj9?format=jpg&name=large" width="700" height="460" alt="웹소설 괴담출근 팬아트로 최초 표지판의 직원 구함 포스터와 비슷한 형태로 구성되어 있으며 주인공인 김솔음과 다른 등장 인물들이 그려져있다."/><br/>
-    출처 :<a href="https://x.com/rok0813/status/1846572576111570989">@rok0813</a>
-</p>
 
-<p style="text-align: center">     시 / 분 </p>
+    <h1>영화 러닝 타임 검색기 🍿</h1>
 
-<div class="time-picker-container">
-    <!-- 선택된 시간과 분을 표시 -->
-    <div class="selected-time">
-        <span id="selected-hours">00</span> : <span id="selected-minutes">00</span>
+    <div id="controls">
+        <label for="min-runtime">최소 러닝 타임 (분):</label>
+        <input type="number" id="min-runtime" value="90" min="10">
+
+        <label for="max-runtime">최대 러닝 타임 (분):</label>
+        <input type="number" id="max-runtime" value="150" min="10">
+
+        <button id="search-button">검색</button>
     </div>
 
-    <!-- 시간(Hours)와 분(Minutes)을 가로 정렬 -->
-    <div class="time-sections">
-        <!-- Hours Section -->
-        <div class="time-section" id="hours-section">
-            <ul class="time-list">
-                <!-- Hours from 00 to 23 -->
-                <li>00</li>
-                <li>01</li>
-                <li>02</li>
-                <li>03</li>
-                <li>04</li>
-                <li>05</li>
-                <li>06</li>
-                <li>07</li>
-                <li>08</li>
-                <li>09</li>
-                <li>10</li>
-                <li>11</li>
-                <li>12</li>
-                <li>13</li>
-                <li>14</li>
-                <li>15</li>
-                <li>16</li>
-                <li>17</li>
-                <li>18</li>
-                <li>19</li>
-                <li>20</li>
-                <li>21</li>
-                <li>22</li>
-                <li>23</li>
-            </ul>
+    <div id="loading-status">데이터를 불러오는 중입니다... 잠시만 기다려 주세요.</div>
+
+    <div id="movie-results">
         </div>
 
-        <!-- Divider (시간과 분 사이의 경계선) -->
-        <div class="divider"></div>
+    <script>
+        // ⚠️ 사용자 API 키 설정
+        const YOUR_API_KEY = "79880cd590dc68cdf6fff4c224d5162b"; 
+        const BASE_URL = "https://api.themoviedb.org/3";
+        const RESULTS_COUNT = 30; // 가져올 영화 개수 (API 호출 제한을 고려하여 적절히 설정)
+        let allMovieData = []; // 모든 영화 데이터 (제목, 러닝 타임 등)를 저장할 배열
 
-        <!-- Minutes Section -->
-        <div class="time-section" id="minutes-section">
-            <ul class="time-list">
-                <!-- Minutes from 00 to 59 -->
-            </ul>
-        </div>
-    </div>
+        const resultsContainer = document.getElementById('movie-results');
+        const loadingStatus = document.getElementById('loading-status');
+        const searchButton = document.getElementById('search-button');
 
-    <!-- JavaScript로 동적으로 분 생성 -->
-    <script src="./js/scroll.js"></script>
+        /**
+         * 1. 인기 영화 목록을 가져오는 함수 (ID만 추출)
+         */
+        async function fetchPopularMovieIds() {
+            const popularUrl = `${BASE_URL}/movie/popular?api_key=${YOUR_API_KEY}&language=ko-KR&page=1`;
+            
+            try {
+                const response = await fetch(popularUrl);
+                const data = await response.json();
+                
+                // 목록에서 처음 N개의 영화 ID만 추출
+                return data.results.slice(0, RESULTS_COUNT).map(movie => movie.id);
+            } catch (error) {
+                console.error("인기 영화 목록을 가져오는 중 오류 발생:", error);
+                loadingStatus.textContent = "오류: 영화 목록을 가져올 수 없습니다. API 키나 네트워크 연결을 확인하세요.";
+                return [];
+            }
+        }
 
-</div>
-</body>
-</html>
+        /**
+         * 2. 개별 영화의 상세 정보 (러닝 타임)를 가져오는 함수
+         */
+        async function fetchMovieRuntime(movieId) {
+            const detailUrl = `${BASE_URL}/movie/${movieId}?api_key=${YOUR_API_KEY}&language=ko-KR`;
+            
+            try {
+                const response = await fetch(detailUrl);
+                const movieDetail = await response.json();
+                
+                // 필요한 정보만 추출하여 반환
+                return {
+                    id: movieId,
+                    title: movieDetail.title,
+                    runtime: movieDetail.runtime, // 👈 핵심 데이터 (분 단위)
+                    overview: movieDetail.overview || "줄거리 정보 없음",
+                    poster_path: movieDetail.poster_path
+                };
+            } catch (error) {
+                console.warn(`영화 ID ${movieId}의 상세 정보를 가져오는 중 오류 발생:`, error);
+                return null; // 실패 시 null 반환
+            }
+        }
+
+        /**
+         * 3. 메인 실행 함수: 모든 데이터를 가져와 전역 변수에 저장
+         */
+        async function initializeData() {
+            loadingStatus.textContent = `영화 ${RESULTS_COUNT}개의 데이터를 불러오는 중...`;
+            
+            const movieIds = await fetchPopularMovieIds();
+            
+            if (movieIds.length === 0) return;
+            
+            // 모든 상세 정보를 병렬로 가져오기
+            const movieDetailsPromises = movieIds.map(id => fetchMovieRuntime(id));
+            const allMovies = await Promise.all(movieDetailsPromises);
+
+            // 유효한 러닝 타임 정보를 가진 영화만 필터링하여 저장
+            allMovieData = allMovies.filter(m => m && m.runtime > 0);
